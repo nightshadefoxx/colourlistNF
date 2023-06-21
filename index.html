@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0f0f0f;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 500px;
+            background-color: #222222;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        #color-form {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #color-list {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .color-box {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ffffff;
+        }
+
+        .color-info {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ffffff;
+            padding: 5px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .color-name {
+            margin-left: 5px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .custom-button {
+            background-color: #0088cc;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-button:hover {
+            background-color: #005f8b;
+        }
+
+        .error-message {
+            display: none;
+            background-color: #ff5555;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            animation-name: fade-in;
+            animation-duration: 0.3s;
+            animation-fill-mode: both;
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Color List</h1>
+        <div id="color-form">
+            <label for="color" style="color: #ffffff;">Color:</label>
+            <input type="color" id="color">
+            <label for="color-name" style="color: #ffffff;">Custom Name:</label>
+            <input type="text" id="color-name">
+            <button class="custom-button" onclick="addColor()">Add Color</button>
+        </div>
+        <div id="color-list"></div>
+        <div id="error-message-duplicate" class="error-message">You have already used this name.</div>
+        <div id="error-message-empty" class="error-message">You cannot have an empty name.</div>
+    </div>
+
+    <script>
+        var colorList = document.getElementById('color-list');
+        var errorDuplicate = document.getElementById('error-message-duplicate');
+        var errorEmpty = document.getElementById('error-message-empty');
+
+        function addColor() {
+            var colorInput = document.getElementById('color');
+            var colorNameInput = document.getElementById('color-name');
+            var color = colorInput.value;
+            var colorName = colorNameInput.value;
+
+            if (colorName === '') {
+                showError(errorEmpty);
+                return;
+            }
+
+            var existingNames = Array.from(document.getElementsByClassName('color-name')).map(function (element) {
+                return element.innerText.toLowerCase();
+            });
+
+            if (existingNames.includes(colorName.toLowerCase())) {
+                showError(errorDuplicate);
+                return;
+            }
+
+            hideError(errorDuplicate);
+            hideError(errorEmpty);
+
+            var colorBox = document.createElement('div');
+            colorBox.className = 'color-box';
+            colorBox.style.backgroundColor = color;
+
+            var colorInfo = document.createElement('div');
+            colorInfo.className = 'color-info';
+
+            var colorText = document.createElement('span');
+            colorText.className = 'color-name';
+            colorText.appendChild(document.createTextNode(colorName));
+
+            colorInfo.appendChild(colorBox);
+            colorInfo.appendChild(colorText);
+
+            colorList.appendChild(colorInfo);
+
+            colorInput.value = '';
+            colorNameInput.value = '';
+        }
+
+        function showError(errorElement) {
+            errorElement.style.display = 'block';
+            errorElement.style.animationName = 'fade-in';
+        }
+
+        function hideError(errorElement) {
+            errorElement.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
